@@ -5,6 +5,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, \
     ProcessFormView
 from django_filters.views import FilterView
 from braces.views import LoginRequiredMixin, FormValidMessageMixin
+from dal import autocomplete
+
 from report.models import Report
 from company.models import Company
 from pola.concurency import ConcurencyProtectUpdateView
@@ -122,3 +124,17 @@ class CompanyDetailView(LoginRequiredMixin, DetailView):
 
         context['fields'] = fields
         return context
+
+
+class CompanyAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated():
+            return Company.objects.none()
+
+        qs = Company.objects.all()
+
+        if self.q:
+            qs = qs.filter_by_name(self.q)
+
+        return qs

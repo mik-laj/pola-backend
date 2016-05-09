@@ -5,9 +5,8 @@ from django.db import models, transaction
 from django.db.models import Count
 from django.forms.models import model_to_dict
 from django.utils.translation import ugettext_lazy as _
-from model_utils.managers import PassThroughManager
 from django.core.validators import ValidationError
-import reversion
+from reversion import revisions as reversion
 from pola.concurency import concurency
 
 
@@ -106,7 +105,7 @@ class Company(models.Model):
     address = models.TextField(null=True, blank=True,
                                verbose_name=_(u"Adres"))
 
-    objects = PassThroughManager.for_queryset_class(CompanyQuerySet)()
+    objects = CompanyQuerySet.as_manager()
 
     def to_dict(self):
         dict = model_to_dict(self)

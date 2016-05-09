@@ -2,10 +2,10 @@
 from django.contrib import admin
 
 from .models import Company
-import reversion
+from reversion.admin import VersionAdmin
 
 
-class CompanyAdmin(reversion.VersionAdmin):
+class CompanyAdmin(VersionAdmin):
     list_display = (
         u'id',
         'nip',

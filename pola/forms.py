@@ -5,7 +5,7 @@ from django.db import transaction
 from django.utils.translation import ugettext as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Reset, Submit
-import reversion
+from reversion import revisions as reversion
 
 
 class HelperMixin(object):
@@ -76,14 +76,14 @@ class ReadOnlyFieldsMixin(object):
         return cleaned_data
 
 
-class AutocompleteChoiceField(forms.ModelChoiceField):
+# class AutocompleteChoiceField(forms.ModelChoiceField):
 
-    def __init__(self, autocomplete_name, *args, **kwargs):
-        from autocomplete_light.registry import registry
-        from autocomplete_light import ChoiceWidget
-        autocomplete = registry.get_autocomplete_from_arg(autocomplete_name)
-        if 'label' not in kwargs:
-            kwargs['label'] = autocomplete.model._meta.verbose_name
-        kwargs['queryset'] = autocomplete.choices
-        kwargs['widget'] = ChoiceWidget(autocomplete)
-        super(AutocompleteChoiceField, self).__init__(*args, **kwargs)
+#     def __init__(self, autocomplete_name, *args, **kwargs):
+#         from autocomplete_light.registry import registry
+#         from autocomplete_light import ChoiceWidget
+#         autocomplete = registry.get_autocomplete_from_arg(autocomplete_name)
+#         if 'label' not in kwargs:
+#             kwargs['label'] = autocomplete.model._meta.verbose_name
+#         kwargs['queryset'] = autocomplete.choices
+#         kwargs['widget'] = ChoiceWidget(autocomplete)
+#         super(AutocompleteChoiceField, self).__init__(*args, **kwargs)

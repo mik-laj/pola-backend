@@ -19,4 +19,9 @@ urlpatterns = [
         views.CompanyDetailView.as_view(), name="detail"),
     url(r'$',
         views.CompanyListView.as_view(), name="list"),
+    url(
+        r'^company-autocomplete/$',
+        views.CompanyAutocomplete.as_view(),
+        name='autocomplete',
+    ),
 ]

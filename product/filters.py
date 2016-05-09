@@ -1,10 +1,14 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
+
+from django.utils.translation import ugettext_lazy as _
+from django import forms
 
 import django_filters
+from dal import autocomplete
+
 from .models import Product
-from django import forms
-from django.utils.translation import ugettext_lazy as _
-from pola.filters import (AutocompleteChoiceFilter,
+from pola.filters import (
+                          # AutocompleteChoiceFilter,
                           CrispyFilterMixin,
                           NoHelpTextFilterMixin)
 
@@ -22,8 +26,12 @@ class ProductFilter(NoHelpTextFilterMixin,
                     CrispyFilterMixin,
                     django_filters.FilterSet):
     company_empty = NullProductFilter(label="Tylko produkty bez producenta")
-    company = AutocompleteChoiceFilter(
-        autocomplete_name="CompanyAutocomplete")
+    # company = AutocompleteChoiceFilter(
+    #     autocomplete_name="CompanyAutocomplete")
+
+    def __init__(self, *args, **kwargs):
+        super(ProductFilter, self).__init__(*args, **kwargs)
+        # TODO: Fix Autocomplete
 
     class Meta:
         model = Product

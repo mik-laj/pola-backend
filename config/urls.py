@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+from django.views import defaults
+from django.views.static import serve
 from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.conf.urls.static import static
@@ -15,8 +16,10 @@ urlpatterns = [
         TemplateView.as_view(template_name='index.html'), name="home"),
     url(r'^cms/$', FrontPageView.as_view(), name="home-cms"),
     url(r'^cms/stats$', StatsPageView.as_view(), name="home-stats"),
-    url(r'^cms/editors-stats$', EditorsStatsPageView.as_view(), name="home-editors-stats"),
-    url(r'^cms/admin-stats$', AdminStatsPageView.as_view(), name="home-admin-stats"),
+    url(r'^cms/editors-stats$', EditorsStatsPageView.as_view(),
+        name="home-editors-stats"),
+    url(r'^cms/admin-stats$', AdminStatsPageView.as_view(),
+        name="home-admin-stats"),
     url(r'^cms/lang/$',
         TemplateView.as_view(template_name='pages/lang-cms.html'),
         name="select_lang"),
@@ -38,17 +41,18 @@ urlpatterns = [
     # url(r'^api/', include('pola.api.urls', namespace='api')),
     url(r'^a/', include('api.urls', namespace='api')),
     url(r'^m/', include('webviews.urls', namespace='webviews')),
-    url(r'^concurency/', include('pola.concurency.urls', namespace='concurency')),
+    url(r'^concurency/',
+        include('pola.concurency.urls', namespace='concurency')),
 
-    url(r'^autocomplete/',
-        decorator_include(login_required, 'autocomplete_light.urls')),
+    # url(r'^autocomplete/',
+    #     decorator_include(login_required, 'autocomplete_light.urls')),
 
     url(r'^robots\.txt$', TemplateView.as_view(
         template_name="robots.txt" if settings.IS_PRODUCTION
         else "robots-staging.txt", content_type='text/plain')),
 
     url(r'^favicon.ico$', RedirectView.as_view(url=settings.STATIC_URL +
-        'favicons/favicon.ico', permanent=True)),
+                                               'favicons/favicon.ico', permanent=True)),
 
     url(r'^apple-touch-icon.png$', RedirectView.as_view(
         url=settings.STATIC_URL +
@@ -90,10 +94,9 @@ urlpatterns = [
 ]
 
 # serving static files
-urlpatterns += patterns(
-    '', (r'^static/(?P<path>.*)$',
-         'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
-)
+urlpatterns += url(r'^static/(?P<path>.*)$',
+                   serve, {'document_root': settings.STATIC_ROOT}),
+
 
 if settings.DEBUG:
 
@@ -104,8 +107,8 @@ if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
     # these url in browser to see how these error pages look like.
     urlpatterns += [
-        url(r'^400/$', 'django.views.defaults.bad_request'),
-        url(r'^403/$', 'django.views.defaults.permission_denied'),
-        url(r'^404/$', 'django.views.defaults.page_not_found'),
-        url(r'^500/$', 'django.views.defaults.server_error'),
+        url(r'^400/$', defaults.bad_request),
+        url(r'^403/$', defaults.permission_denied),
+        url(r'^404/$', defaults.page_not_found),
+        url(r'^500/$', defaults.server_error),
     ]
